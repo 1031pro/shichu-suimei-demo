@@ -496,64 +496,152 @@ td {
 .balance-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 
 .balance-card {
+  --element: var(--green-2);
+  --element-bg: rgba(13, 106, 79, 0.12);
+  --element-soft: rgba(13, 106, 79, 0.2);
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  gap: 10px 12px;
+  align-items: center;
   padding: 14px;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  min-height: 112px;
+  background:
+    linear-gradient(145deg, rgba(255, 253, 248, 0.94), rgba(255, 250, 240, 0.82)),
+    radial-gradient(circle at 90% 10%, var(--element-soft), transparent 54%);
+  border: 1px solid color-mix(in srgb, var(--element) 34%, var(--line));
   border-radius: 8px;
 }
 
-.balance-card strong,
-.balance-card span {
+.balance-card::before {
+  position: absolute;
+  top: -38px;
+  right: -34px;
+  width: 94px;
+  height: 94px;
+  background: var(--element-bg);
+  border: 1px solid color-mix(in srgb, var(--element) 28%, transparent);
+  border-radius: 50%;
+  content: "";
+}
+
+.balance-card::after {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 24px;
+  height: 24px;
+  background:
+    linear-gradient(45deg, transparent 39%, color-mix(in srgb, var(--element) 64%, #fff) 40% 60%, transparent 61%),
+    linear-gradient(-45deg, transparent 39%, color-mix(in srgb, var(--element) 64%, #fff) 40% 60%, transparent 61%);
+  opacity: 0.26;
+  content: "";
+}
+
+.balance-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  color: #fffdf8;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--element) 82%, #fff), var(--element));
+  border: 1px solid color-mix(in srgb, var(--element) 60%, #fff);
+  border-radius: 8px;
+  place-items: center;
+}
+
+.balance-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+  stroke: color-mix(in srgb, currentColor 82%, var(--element));
+  stroke-width: 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.balance-copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.balance-copy strong,
+.balance-copy span {
   display: block;
 }
 
-.balance-card strong {
-  color: var(--deep-green);
+.balance-copy strong {
+  color: var(--element);
   font-size: 0.95rem;
+  font-weight: 900;
 }
 
-.balance-card span {
-  margin: 6px 0 10px;
-  font-size: 1.45rem;
-  font-weight: 800;
+.balance-copy span {
+  color: var(--ink);
+  font-size: 1.85rem;
+  font-weight: 900;
+  line-height: 1;
 }
 
-.balance-card .bar {
-  height: 7px;
+.balance-meter {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / -1;
+  height: 12px;
   overflow: hidden;
-  background: #eadfc7;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 22%, rgba(255, 253, 248, 0.86) 22% 24%),
+    #eadfc7;
+  border: 1px solid rgba(104, 83, 45, 0.1);
   border-radius: 999px;
 }
 
-.balance-card .bar i {
+.balance-meter i {
   display: block;
   height: 100%;
-  background: var(--green-2);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--element) 72%, #fff), var(--element));
   border-radius: 999px;
 }
 
-.balance-card:nth-child(1) .bar i {
-  background: var(--wood);
+.balance-wood {
+  --element: #2f7d47;
+  --element-bg: rgba(47, 125, 71, 0.16);
+  --element-soft: rgba(47, 125, 71, 0.22);
 }
 
-.balance-card:nth-child(2) .bar i {
-  background: var(--fire);
+.balance-fire {
+  --element: #bf3f32;
+  --element-bg: rgba(191, 63, 50, 0.15);
+  --element-soft: rgba(191, 63, 50, 0.22);
 }
 
-.balance-card:nth-child(3) .bar i {
-  background: var(--earth);
+.balance-earth {
+  --element: #8a6432;
+  --element-bg: rgba(138, 100, 50, 0.16);
+  --element-soft: rgba(138, 100, 50, 0.24);
 }
 
-.balance-card:nth-child(4) .bar i {
-  background: var(--metal);
+.balance-metal {
+  --element: #b98a1f;
+  --element-bg: rgba(185, 138, 31, 0.16);
+  --element-soft: rgba(185, 138, 31, 0.24);
 }
 
-.balance-card:nth-child(5) .bar i {
-  background: var(--water);
+.balance-water {
+  --element: #2d74a8;
+  --element-bg: rgba(45, 116, 168, 0.15);
+  --element-soft: rgba(45, 116, 168, 0.22);
 }
 
 .notes-list {

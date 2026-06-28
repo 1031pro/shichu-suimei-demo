@@ -55,6 +55,28 @@ function renderPillarTable(chart) {
 function renderElementBalance(chart) {
   const entries = Object.entries(chart.fiveElementBalance);
   const max = Math.max(...entries.map(([, count]) => count), 1);
+  const elementMeta = {
+    木: {
+      className: "wood",
+      icon: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 7c8 0 15 6 15 14 0 9-7 15-15 15S9 30 9 21C9 13 16 7 24 7Z"/><path d="M24 29v12M17 41h14M24 29l-7-7M24 29l8-9"/></svg>`,
+    },
+    火: {
+      className: "fire",
+      icon: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M27 5c2 8 10 12 10 23 0 8-6 14-13 14S11 36 11 28c0-7 4-12 9-18 0 7 5 10 7 14 2-4 2-8 0-19Z"/><path d="M25 31c0 4-3 7-7 7 1 3 4 5 7 5 5 0 9-4 9-9 0-4-2-7-6-10 0 3-1 5-3 7Z"/></svg>`,
+    },
+    土: {
+      className: "earth",
+      icon: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M5 38 18 14l8 12 5-7 12 19H5Z"/><path d="M15 38h18M20 31h8"/></svg>`,
+    },
+    金: {
+      className: "metal",
+      icon: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4 39 19 24 44 9 19 24 4Z"/><path d="M9 19h30M18 19l6 25 6-25M18 19l6-15 6 15"/></svg>`,
+    },
+    水: {
+      className: "water",
+      icon: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5c8 10 14 18 14 26 0 8-6 13-14 13s-14-5-14-13c0-8 6-16 14-26Z"/><path d="M17 31c1 4 4 6 8 6"/></svg>`,
+    },
+  };
 
   return `
     <section class="result-block">
@@ -65,13 +87,21 @@ function renderElementBalance(chart) {
       <div class="balance-grid">
         ${entries
           .map(
-            ([element, count]) => `
-              <div class="balance-card">
-                <strong>${escapeHtml(element)}</strong>
-                <span>${count}</span>
-                <div class="bar"><i style="width:${(count / max) * 100}%"></i></div>
+            ([element, count]) => {
+              const meta = elementMeta[element] || { className: "neutral", icon: "" };
+              return `
+              <div class="balance-card balance-${meta.className}">
+                <div class="balance-icon">${meta.icon}</div>
+                <div class="balance-copy">
+                  <strong>${escapeHtml(element)}</strong>
+                  <span>${count}</span>
+                </div>
+                <div class="balance-meter" aria-label="${escapeHtml(element)} ${count}">
+                  <i style="width:${(count / max) * 100}%"></i>
+                </div>
               </div>
-            `,
+            `;
+            },
           )
           .join("")}
       </div>
