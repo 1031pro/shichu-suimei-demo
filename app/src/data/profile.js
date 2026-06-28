@@ -24,6 +24,7 @@ export const defaultProfile = {
   },
   pdfReport: {
     enabled: true,
+    title: "四柱推命鑑定書",
     practitionerName: "",
   },
 };

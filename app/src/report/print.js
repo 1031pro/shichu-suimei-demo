@@ -101,6 +101,10 @@ function practitionerLine(profile) {
   return name ? `<p class="practitioner-name">鑑定士　${escapeHtml(name)}</p>` : "";
 }
 
+function reportTitle(profile) {
+  return profile?.pdfReport?.title || "四柱推命鑑定書";
+}
+
 export function printReport({ chart, majorLuck, annualLuck, interpretation, profile, customerName }) {
   const reportWindow = window.open("", "_blank");
   if (!reportWindow) return;
@@ -110,6 +114,7 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation, prof
   const currentMajorLuck = majorLuck.rows.find((row) => row.active) || majorLuck.rows[0];
   const currentAnnualLuck = annualLuck.find((row) => row.active) || annualLuck[0];
   const [firstText, secondText] = splitInterpretation(interpretation);
+  const title = reportTitle(profile);
 
   reportWindow.document.write(`
     <!doctype html>
@@ -466,10 +471,12 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation, prof
           .footer {
             position: absolute;
             right: 12mm;
-            bottom: 7mm;
+            bottom: 8mm;
             z-index: 1;
             color: #947b43;
-            font-size: 7pt;
+            font-size: 9.5pt;
+            font-weight: 700;
+            letter-spacing: 0.06em;
           }
 
           @media print {
@@ -493,7 +500,7 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation, prof
           <section class="sheet cover">
             <div class="content">
               <img class="cover-emblem" src="${emblemUrl}" alt="" />
-              <h1>四柱推命 鑑定書</h1>
+              <h1>${escapeHtml(title)}</h1>
               ${customerLine(customerName)}
               <div class="cover-meta">
                 <div><span>生年月日</span><strong>${formatDate(chart.date)}</strong></div>
@@ -502,7 +509,7 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation, prof
               </div>
               ${practitionerLine(profile)}
             </div>
-            <div class="footer">四柱推命鑑定書</div>
+            <div class="footer">${escapeHtml(title)}</div>
           </section>
 
           <section class="sheet">
@@ -536,7 +543,7 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation, prof
                 </div>
               </div>
             </div>
-            <div class="footer">第一頁　命式と鑑定文</div>
+            <div class="footer">${escapeHtml(title)}　第一頁</div>
           </section>
 
           <section class="sheet">
@@ -571,7 +578,7 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation, prof
                 </div>
               </div>
             </div>
-            <div class="footer">第二頁　運勢詳解</div>
+            <div class="footer">${escapeHtml(title)}　第二頁</div>
           </section>
         </main>
         <script>
