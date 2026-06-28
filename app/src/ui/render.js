@@ -93,7 +93,7 @@ function renderElementBalance(chart) {
 
 function renderMajorLuck(luck) {
   return `
-    <section class="result-block luck-block major-luck-block">
+    <section id="major-luck-section" class="result-block luck-block major-luck-block">
       <div class="section-title">
         <h2>大運</h2>
         <span>${escapeHtml(luck.direction.label)}・開始 ${luck.start.age}歳</span>
@@ -133,7 +133,7 @@ function renderMajorLuck(luck) {
 
 function renderAnnualLuck(rows) {
   return `
-    <section class="result-block luck-block annual-luck-block">
+    <section id="annual-luck-section" class="result-block luck-block annual-luck-block">
       <div class="section-title">
         <h2>年運</h2>
         <span>前後10年</span>
@@ -174,16 +174,16 @@ export function renderResult(target, { chart, majorLuck, annualLuck, profile }) 
     : `${String(chart.input.hour).padStart(2, "0")}:${String(chart.input.minute).padStart(2, "0")}`;
 
   target.innerHTML = `
-    <div class="app-preview-header">
+    <div id="chart-section" class="app-preview-header">
       <div class="app-mark" aria-hidden="true">◇</div>
       <strong>四柱推命ツール</strong>
-      <span class="app-gear" aria-hidden="true"></span>
+      <button type="button" class="app-gear" data-edit-input aria-label="条件を変更"></button>
     </div>
     <nav class="app-tabs" aria-label="表示切り替え">
-      <span class="is-active">命式</span>
-      <span>大運</span>
-      <span>年運</span>
-      <span>五行</span>
+      <button type="button" class="is-active" data-scroll-target="chart-section">命式</button>
+      <button type="button" data-scroll-target="major-luck-section">大運</button>
+      <button type="button" data-scroll-target="annual-luck-section">年運</button>
+      <button type="button" data-scroll-target="balance-section">五行</button>
     </nav>
     <div class="result-summary">
       <div>
@@ -191,25 +191,30 @@ export function renderResult(target, { chart, majorLuck, annualLuck, profile }) 
         <h1>${formatDate(chart.date)} ${escapeHtml(birthTimeLabel)}</h1>
         <p>節入り: ${escapeHtml(chart.monthBoundary.name)} / 空亡: ${escapeHtml(chart.voidBranches.join("・"))}</p>
       </div>
-      <div class="profile-badge">
-        <span>流派設定</span>
-        <strong>${escapeHtml(profile.name)}</strong>
-      </div>
     </div>
     ${renderPillarTable(chart)}
     <div class="luck-grid">
       ${renderMajorLuck(majorLuck)}
       ${renderAnnualLuck(annualLuck)}
     </div>
-    ${renderElementBalance(chart)}
-    <section class="result-block">
-      <div class="section-title">
-        <h2>計算メモ</h2>
-        <span>流派差分候補</span>
-      </div>
-      <ul class="notes-list">
-        ${chart.notes.map((note) => `<li>${escapeHtml(note)}</li>`).join("")}
-      </ul>
-    </section>
+    <div id="balance-section">${renderElementBalance(chart)}</div>
+    <nav class="bottom-nav" aria-label="主要表示">
+      <button type="button" class="is-active" data-scroll-target="chart-section">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        命式
+      </button>
+      <button type="button" data-scroll-target="major-luck-section">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18h14M7 15l5-9 5 9"/></svg>
+        大運
+      </button>
+      <button type="button" data-scroll-target="annual-luck-section">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v3M17 4v3M5 9h14M6 6h12v14H6z"/></svg>
+        年運
+      </button>
+      <button type="button" data-scroll-target="balance-section">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M4 12h16M6 6l12 12M18 6 6 18"/></svg>
+        五行
+      </button>
+    </nav>
   `;
 }

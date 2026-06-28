@@ -9,3 +9,5 @@ build/
 .cache/
 .tmp/
 coverage/
+assets/eval-*.png
+assets/current-reference-style-*.png

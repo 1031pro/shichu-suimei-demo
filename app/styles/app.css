@@ -30,14 +30,7 @@
 body {
   min-height: 100vh;
   margin: 0;
-  background:
-    linear-gradient(90deg, rgba(255, 250, 240, 0.64), rgba(244, 234, 216, 0.48)),
-    var(--ornament-image),
-    linear-gradient(135deg, #fffaf0 0%, #f4ead8 45%, #ecdfc6 100%);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  background: #fbf3df;
 }
 
 button,
@@ -59,17 +52,32 @@ p {
   min-height: 100vh;
 }
 
+body:not(.result-mode) .app-shell {
+  display: grid;
+  grid-template-columns: minmax(320px, 430px);
+  justify-content: center;
+  background: #061b36;
+}
+
+body:not(.result-mode) .input-panel {
+  min-height: 100vh;
+  border-right: 0;
+}
+
+body.result-mode .app-shell {
+  display: block;
+  min-height: 100vh;
+}
+
+body.result-mode .input-panel {
+  display: none;
+}
+
 .input-panel {
   position: relative;
   overflow: hidden;
   padding: 32px;
-  background:
-    linear-gradient(160deg, rgba(0, 61, 47, 0.86), rgba(0, 48, 37, 0.98)),
-    var(--ornament-image),
-    linear-gradient(180deg, rgba(0, 61, 47, 0.98), rgba(0, 48, 37, 0.98)),
-    var(--deep-green);
-  background-position: 76% center, center, center;
-  background-size: cover, auto 100%, auto;
+  background: #061b36;
   border-right: 1px solid rgba(234, 214, 165, 0.46);
   color: #fffaf0;
 }
@@ -667,7 +675,7 @@ td {
   }
 
   .input-panel {
-    padding: 20px;
+    padding: 16px 14px 18px;
     border-right: 0;
     border-bottom: 1px solid rgba(234, 214, 165, 0.46);
   }
@@ -677,7 +685,59 @@ td {
   }
 
   .results-panel {
-    padding: 20px;
+    padding: 8px;
+  }
+}
+
+body.result-mode {
+  background: #fbf3df;
+}
+
+body.result-mode .results-panel {
+  width: min(100%, 430px);
+  max-width: none;
+  margin: 0 auto;
+  padding: 110px 8px 88px;
+}
+
+body.result-mode .app-preview-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 8;
+  width: min(100%, 430px);
+  margin: 0 auto;
+  border-radius: 0;
+}
+
+body.result-mode .app-tabs {
+  position: fixed;
+  top: 59px;
+  right: 0;
+  left: 0;
+  z-index: 8;
+  width: min(100%, 430px);
+  margin: 0 auto;
+}
+
+body.result-mode .result-summary {
+  margin-top: 0;
+}
+
+@media (min-width: 901px) {
+  body.result-mode .results-panel {
+    width: min(100%, 980px);
+    padding: 92px 28px 32px;
+  }
+
+  body.result-mode .app-preview-header {
+    width: min(100%, 980px);
+    border-radius: 0 0 10px 10px;
+  }
+
+  body.result-mode .app-tabs {
+    display: none;
   }
 }
 
@@ -704,20 +764,49 @@ td {
 
 @media (max-width: 560px) {
   h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .date-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .brand-block {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+
+  .birth-form {
+    gap: 12px;
+  }
+
+  legend,
+  .current-year > span,
+  label > span {
+    margin-bottom: 4px;
+    font-size: 12px;
+  }
+
+  select,
+  input[type="number"] {
+    min-height: 36px;
+    padding: 6px 9px;
+  }
+
+  .segmented span {
+    padding: 8px;
+  }
+
+  button[type="submit"] {
+    min-height: 40px;
   }
 }
 
 /* Listing-style app UI */
 body {
-  background:
-    linear-gradient(90deg, rgba(193, 142, 31, 0.12) 1px, transparent 1px) 0 0 / 64px 64px,
-    linear-gradient(0deg, rgba(193, 142, 31, 0.1) 1px, transparent 1px) 0 0 / 64px 64px,
-    #fbf3df;
+  background: #fbf3df;
 }
 
 .input-panel {
@@ -770,6 +859,8 @@ body {
   width: 28px;
   height: 28px;
   margin-left: auto;
+  cursor: pointer;
+  background: #fffefa;
   border: 3px solid #061b36;
   border-radius: 50%;
 }
@@ -791,15 +882,19 @@ body {
   border-bottom: 0;
 }
 
-.app-tabs span {
+.app-tabs button {
   padding: 11px 8px;
   color: #061b36;
+  font: inherit;
   font-weight: 800;
   text-align: center;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
   border-right: 1px solid #d7c694;
 }
 
-.app-tabs span:last-child {
+.app-tabs button:last-child {
   border-right: 0;
 }
 
@@ -946,29 +1041,34 @@ tbody th,
 .balance-list {
   display: grid;
   gap: 8px;
+  width: min(100%, 420px);
 }
 
 .balance-row {
   --element: #061b36;
   display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) 26px;
-  gap: 10px;
+  grid-template-columns: 24px minmax(120px, 1fr) 24px;
+  gap: 8px;
   align-items: center;
 }
 
 .balance-row strong {
+  order: 1;
   color: var(--element);
   font-weight: 900;
   text-align: center;
 }
 
 .balance-row span {
+  order: 3;
   color: #061b36;
   font-weight: 800;
   text-align: right;
 }
 
 .balance-row .balance-meter {
+  order: 2;
+  grid-column: auto;
   width: 100%;
   height: 8px;
   background: #edf0ef;
@@ -1018,5 +1118,86 @@ tbody th,
 
   .balance-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+.bottom-nav {
+  display: none;
+}
+
+@media (min-width: 901px) {
+  .app-tabs {
+    display: none;
+  }
+
+  .app-preview-header {
+    border-bottom: 1px solid #d7c694;
+    border-radius: 10px;
+  }
+
+  .result-summary {
+    margin-top: 12px;
+    border-top: 1px solid #d7c694;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  html {
+    scroll-padding-top: 112px;
+  }
+
+  body {
+    padding-bottom: 82px;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 8px;
+    background: rgba(255, 254, 250, 0.96);
+    border: 1px solid #d7c694;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(6, 27, 54, 0.16);
+  }
+
+  .bottom-nav button {
+    display: grid;
+    gap: 5px;
+    min-height: 54px;
+    padding: 7px 4px;
+    color: #061b36;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    background: #fffefa;
+    border: 1px solid #c9d0d8;
+    border-radius: 8px;
+    place-items: center;
+  }
+
+  .bottom-nav .is-active,
+  .bottom-nav button:focus-visible {
+    color: #fffefa;
+    background: #061b36;
+  }
+
+  .bottom-nav svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 }

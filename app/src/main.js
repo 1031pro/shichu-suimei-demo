@@ -65,6 +65,9 @@ function calculateAndRender() {
     annualLuck,
     profile: defaultProfile,
   });
+  resultPanel.hidden = false;
+  document.body.classList.add("result-mode");
+  window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 function initForm() {
@@ -86,8 +89,34 @@ form.addEventListener("submit", (event) => {
   calculateAndRender();
 });
 
+resultPanel.addEventListener("click", (event) => {
+  const editButton = event.target.closest("[data-edit-input]");
+  if (editButton) {
+    document.body.classList.remove("result-mode");
+    resultPanel.hidden = true;
+    window.scrollTo({ top: 0, behavior: "instant" });
+    return;
+  }
+
+  const button = event.target.closest("[data-scroll-target]");
+  if (!button) return;
+
+  const target = document.querySelector(`#${button.dataset.scrollTarget}`);
+  if (!target) return;
+
+  resultPanel.querySelectorAll("[data-scroll-target]").forEach((navButton) => {
+    navButton.classList.toggle("is-active", navButton.dataset.scrollTarget === button.dataset.scrollTarget);
+  });
+
+  if (button.dataset.scrollTarget === "chart-section") {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
 initForm();
-calculateAndRender();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

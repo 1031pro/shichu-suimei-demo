@@ -1,4 +1,4 @@
-const CACHE_NAME = "shichu-suimei-tool-v2";
+const CACHE_NAME = "shichu-suimei-tool-v4";
 
 const APP_SHELL = [
   "./",
