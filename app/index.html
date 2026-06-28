@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>四柱推命 命式ツール</title>
+    <meta name="theme-color" content="#003d2f" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="命式ツール" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./styles/app.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="input-panel" aria-label="命式入力">
+        <div class="brand-block">
+          <p class="eyebrow">四柱推命 命式ツール</p>
+          <h1>命式・大運・年運を確認</h1>
+        </div>
+
+        <form id="birth-form" class="birth-form">
+          <fieldset>
+            <legend>生年月日</legend>
+            <div class="date-grid">
+              <label>
+                <span>年</span>
+                <select id="birth-year" name="birthYear" required></select>
+              </label>
+              <label>
+                <span>月</span>
+                <select id="birth-month" name="birthMonth" required></select>
+              </label>
+              <label>
+                <span>日</span>
+                <select id="birth-day" name="birthDay" required></select>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>出生時刻</legend>
+            <div class="time-row">
+              <label>
+                <span>時</span>
+                <select id="birth-hour" name="birthHour"></select>
+              </label>
+              <label>
+                <span>分</span>
+                <select id="birth-minute" name="birthMinute"></select>
+              </label>
+              <label class="check-row">
+                <input id="unknown-time" name="unknownTime" type="checkbox" checked />
+                <span>時刻不明</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>性別</legend>
+            <div class="segmented">
+              <label>
+                <input type="radio" name="sex" value="male" checked />
+                <span>男性</span>
+              </label>
+              <label>
+                <input type="radio" name="sex" value="female" />
+                <span>女性</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="current-year">
+            <span>年運の基準年</span>
+            <input id="current-year" name="currentYear" type="number" min="1900" max="2200" />
+          </label>
+
+          <button type="submit">命式を表示</button>
+        </form>
+      </section>
+
+      <section id="results" class="results-panel" aria-live="polite">
+        <div class="empty-state">
+          <h2>入力すると結果が表示されます</h2>
+          <p>ライトプランの標準仕様として、命式、大運、年運、五行バランスを表示します。</p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
