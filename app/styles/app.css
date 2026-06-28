@@ -497,6 +497,15 @@ td {
   font-weight: 750;
 }
 
+.meishiki-table {
+  table-layout: fixed;
+}
+
+.meishiki-table thead th:first-child,
+.meishiki-table .row-head {
+  width: 68px;
+}
+
 .compact table {
   min-width: 420px;
 }
@@ -802,6 +811,20 @@ body.result-mode .result-summary {
   button[type="submit"] {
     min-height: 40px;
   }
+
+  .meishiki-table {
+    font-size: 0.78rem;
+  }
+
+  .meishiki-table th,
+  .meishiki-table td {
+    padding: 8px 3px;
+  }
+
+  .meishiki-table thead th:first-child,
+  .meishiki-table .row-head {
+    width: 62px;
+  }
 }
 
 /* Listing-style app UI */
@@ -826,7 +849,7 @@ body {
 
 .app-preview-header {
   display: grid;
-  grid-template-columns: 34px 1fr 34px;
+  grid-template-columns: 34px 1fr auto;
   gap: 10px;
   align-items: center;
   padding: 14px 16px;
@@ -853,24 +876,18 @@ body {
   place-items: center;
 }
 
-.app-gear {
-  position: relative;
-  display: block;
-  width: 28px;
-  height: 28px;
-  margin-left: auto;
+.date-edit-button {
+  min-height: 32px;
+  padding: 6px 10px;
+  color: #061b36;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
   cursor: pointer;
-  background: #fffefa;
-  border: 3px solid #061b36;
-  border-radius: 50%;
-}
-
-.app-gear::before {
-  position: absolute;
-  inset: 7px;
-  border: 3px solid #061b36;
-  border-radius: 50%;
-  content: "";
+  background: #f7e8bd;
+  border: 1px solid #bd8c22;
+  border-radius: 8px;
 }
 
 .app-tabs {

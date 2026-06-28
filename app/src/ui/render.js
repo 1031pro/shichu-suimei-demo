@@ -57,7 +57,8 @@ function coloredCell(value, className = elementClass(value)) {
 }
 
 function renderPillarTable(chart) {
-  const pillars = chart.pillars;
+  const displayOrder = ["time", "day", "month", "year"];
+  const pillars = displayOrder.map((key) => chart.pillarMap[key]).filter(Boolean);
   const header = pillars
     .map((pillar) => `<th class="pillar-head pillar-${escapeHtml(pillar.key)}">${escapeHtml(pillar.pillarLabel)}</th>`)
     .join("");
@@ -223,7 +224,7 @@ export function renderResult(target, { chart, majorLuck, annualLuck, profile }) 
     <div id="chart-section" class="app-preview-header">
       <div class="app-mark" aria-hidden="true">◇</div>
       <strong>四柱推命ツール</strong>
-      <button type="button" class="app-gear" data-edit-input aria-label="条件を変更"></button>
+      <button type="button" class="date-edit-button" data-edit-input>日付を変更</button>
     </div>
     <nav class="app-tabs" aria-label="表示切り替え">
       <button type="button" class="is-active" data-scroll-target="chart-section">命式</button>
