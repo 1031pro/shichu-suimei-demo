@@ -506,14 +506,14 @@ td {
   position: relative;
   overflow: hidden;
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
-  grid-template-rows: auto auto;
-  gap: 10px 12px;
+  grid-template-rows: auto auto auto;
+  gap: 8px;
   align-items: center;
-  padding: 14px;
-  min-height: 112px;
+  justify-items: center;
+  padding: 14px 12px 12px;
+  min-height: 142px;
   background:
-    linear-gradient(145deg, rgba(255, 253, 248, 0.94), rgba(255, 250, 240, 0.82)),
+    linear-gradient(180deg, rgba(255, 253, 248, 0.96), rgba(255, 250, 240, 0.88)),
     radial-gradient(circle at 90% 10%, var(--element-soft), transparent 54%);
   border: 1px solid color-mix(in srgb, var(--element) 34%, var(--line));
   border-radius: 8px;
@@ -547,19 +547,20 @@ td {
 .balance-icon {
   position: relative;
   z-index: 1;
+  order: 2;
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 52px;
+  height: 52px;
   color: #fffdf8;
   background: linear-gradient(150deg, color-mix(in srgb, var(--element) 82%, #fff), var(--element));
   border: 1px solid color-mix(in srgb, var(--element) 60%, #fff);
-  border-radius: 8px;
+  border-radius: 50%;
   place-items: center;
 }
 
 .balance-icon svg {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   fill: currentColor;
   stroke: color-mix(in srgb, currentColor 82%, var(--element));
   stroke-width: 2.1;
@@ -570,10 +571,14 @@ td {
 .balance-copy {
   position: relative;
   z-index: 1;
+  order: 1;
   display: flex;
+  flex-direction: column;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  text-align: center;
 }
 
 .balance-copy strong,
@@ -583,13 +588,14 @@ td {
 
 .balance-copy strong {
   color: var(--element);
-  font-size: 0.95rem;
+  font-size: 1.08rem;
   font-weight: 900;
+  line-height: 1;
 }
 
 .balance-copy span {
   color: var(--ink);
-  font-size: 1.85rem;
+  font-size: 1.82rem;
   font-weight: 900;
   line-height: 1;
 }
@@ -597,7 +603,8 @@ td {
 .balance-meter {
   position: relative;
   z-index: 1;
-  grid-column: 1 / -1;
+  order: 3;
+  width: 100%;
   height: 12px;
   overflow: hidden;
   background:
