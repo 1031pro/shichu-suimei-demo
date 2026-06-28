@@ -31,6 +31,16 @@ body {
   min-height: 100vh;
   margin: 0;
   background: #fbf3df;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea,
+select,
+button {
+  -webkit-user-select: auto;
+  user-select: auto;
 }
 
 body.is-locked {
