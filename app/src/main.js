@@ -15,6 +15,7 @@ const hourSelect = document.querySelector("#birth-hour");
 const minuteSelect = document.querySelector("#birth-minute");
 const unknownTime = document.querySelector("#unknown-time");
 const currentYearInput = document.querySelector("#current-year");
+const customerNameInput = document.querySelector("#customer-name");
 
 let currentReport = null;
 
@@ -47,6 +48,7 @@ function setTimeControlsState() {
 function readInput() {
   const data = new FormData(form);
   return {
+    customerName: String(data.get("customerName") || "").trim(),
     year: Number(data.get("birthYear")),
     month: Number(data.get("birthMonth")),
     day: Number(data.get("birthDay")),
@@ -72,6 +74,7 @@ function calculateAndRender() {
     annualLuck,
     interpretation,
     profile: defaultProfile,
+    customerName: input.customerName,
   };
   renderResult(resultPanel, {
     chart,
@@ -92,6 +95,7 @@ function initForm() {
   fillSelect(hourSelect, Array.from({ length: 24 }, (_, i) => i), 12);
   fillSelect(minuteSelect, Array.from({ length: 60 }, (_, i) => i), 0);
   currentYearInput.value = today.getFullYear();
+  customerNameInput.value = "";
   updateDays();
   setTimeControlsState();
 }

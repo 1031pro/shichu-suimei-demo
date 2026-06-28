@@ -149,6 +149,7 @@ fieldset {
 
 legend,
 .current-year > span,
+.report-name-field > span,
 label > span {
   display: block;
   margin-bottom: 8px;
@@ -172,7 +173,8 @@ label > span {
 }
 
 select,
-input[type="number"] {
+input[type="number"],
+input[type="text"] {
   width: 100%;
   min-height: 42px;
   padding: 8px 10px;
@@ -185,9 +187,18 @@ input[type="number"] {
 
 select:focus,
 input[type="number"]:focus,
+input[type="text"]:focus,
 button:focus-visible {
   outline: 3px solid rgba(199, 154, 50, 0.38);
   outline-offset: 2px;
+}
+
+.report-name-field small {
+  display: block;
+  margin-top: 6px;
+  color: rgba(255, 250, 240, 0.64);
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .check-row {
@@ -793,6 +804,7 @@ body.result-mode .result-summary {
 
   legend,
   .current-year > span,
+  .report-name-field > span,
   label > span {
     margin-bottom: 4px;
     font-size: 12px;

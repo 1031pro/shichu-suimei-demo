@@ -92,11 +92,21 @@ function splitInterpretation(items) {
   return [items.slice(0, 4), items.slice(4)];
 }
 
-export function printReport({ chart, majorLuck, annualLuck, interpretation }) {
+function customerLine(name) {
+  return name ? `<p class="customer-name">${escapeHtml(name)} 様</p>` : "";
+}
+
+function practitionerLine(profile) {
+  const name = profile?.pdfReport?.practitionerName;
+  return name ? `<p class="practitioner-name">鑑定士　${escapeHtml(name)}</p>` : "";
+}
+
+export function printReport({ chart, majorLuck, annualLuck, interpretation, profile, customerName }) {
   const reportWindow = window.open("", "_blank");
   if (!reportWindow) return;
 
   const ornamentUrl = new URL("../assets/report/a4-landscape-ornament.png", window.location.href).href;
+  const emblemUrl = new URL("../assets/report/shichu-emblem.png", window.location.href).href;
   const currentMajorLuck = majorLuck.rows.find((row) => row.active) || majorLuck.rows[0];
   const currentAnnualLuck = annualLuck.find((row) => row.active) || annualLuck[0];
   const [firstText, secondText] = splitInterpretation(interpretation);
@@ -167,22 +177,16 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation }) {
           .cover .content {
             width: 190mm;
             margin: 0 auto;
-            padding: 18mm 16mm;
+            padding: 15mm 16mm 16mm;
             background: rgba(255, 254, 250, 0.88);
             border: 1px solid rgba(177, 126, 25, 0.8);
           }
 
-          .seal {
-            width: 20mm;
-            height: 20mm;
-            margin: 0 auto 8mm;
-            display: grid;
-            place-items: center;
-            color: #b17e19;
-            border: 2px solid #b17e19;
-            border-radius: 50%;
-            font-size: 18pt;
-            font-weight: 700;
+          .cover-emblem {
+            width: 27mm;
+            height: 27mm;
+            margin: 0 auto 7mm;
+            object-fit: contain;
           }
 
           h1 {
@@ -191,10 +195,17 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation }) {
             letter-spacing: 0.16em;
           }
 
-          .subtitle {
-            margin: 5mm 0 10mm;
+          .customer-name {
+            margin: 5mm 0 8mm;
             color: #8a6418;
-            font-size: 13pt;
+            font-size: 15pt;
+            font-weight: 700;
+          }
+
+          .practitioner-name {
+            margin: 8mm 0 0;
+            color: #071a35;
+            font-size: 10.5pt;
             font-weight: 700;
           }
 
@@ -481,16 +492,17 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation }) {
         <main>
           <section class="sheet cover">
             <div class="content">
-              <div class="seal">命</div>
+              <img class="cover-emblem" src="${emblemUrl}" alt="" />
               <h1>四柱推命 鑑定書</h1>
-              <p class="subtitle">命式・五行・大運・年運から読む総合レポート</p>
+              ${customerLine(customerName)}
               <div class="cover-meta">
                 <div><span>生年月日</span><strong>${formatDate(chart.date)}</strong></div>
                 <div><span>出生時刻</span><strong>${escapeHtml(formatBirthTime(chart))}</strong></div>
                 <div><span>作成日</span><strong>${formatDate(new Date())}</strong></div>
               </div>
+              ${practitionerLine(profile)}
             </div>
-            <div class="footer">Shichu Suimei Premium Report</div>
+            <div class="footer">四柱推命鑑定書</div>
           </section>
 
           <section class="sheet">
@@ -498,7 +510,7 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation }) {
               <div class="left">
                 <div class="report-header">
                   <strong>命式結果</strong>
-                  <span>Chart / Luck / Elements</span>
+                  <span>命式・運勢・五行</span>
                 </div>
                 <div class="summary-grid">
                   <div class="summary-card"><span>日柱</span><strong>${escapeHtml(chart.pillarMap.day.kanshiLabel)}</strong></div>
@@ -517,14 +529,14 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation }) {
               <div class="right">
                 <div class="report-header">
                   <strong>鑑定文</strong>
-                  <span>Interpretation</span>
+                  <span>読み解き</span>
                 </div>
                 <div class="text-grid">
                   ${interpretationBlocks(firstText)}
                 </div>
               </div>
             </div>
-            <div class="footer">01 / Summary and Interpretation</div>
+            <div class="footer">第一頁　命式と鑑定文</div>
           </section>
 
           <section class="sheet">
@@ -532,7 +544,7 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation }) {
               <div class="left">
                 <div class="report-header">
                   <strong>運勢補足</strong>
-                  <span>Major Luck / Annual Luck</span>
+                  <span>大運・年運</span>
                 </div>
                 <div class="panel flow-panel">
                   <h3>現在の大運</h3>
@@ -552,14 +564,14 @@ export function printReport({ chart, majorLuck, annualLuck, interpretation }) {
               <div class="right">
                 <div class="report-header">
                   <strong>鑑定文 続き</strong>
-                  <span>Detailed Reading</span>
+                  <span>詳解</span>
                 </div>
                 <div class="text-grid">
                   ${interpretationBlocks(secondText)}
                 </div>
               </div>
             </div>
-            <div class="footer">02 / Detailed Luck Reading</div>
+            <div class="footer">第二頁　運勢詳解</div>
           </section>
         </main>
         <script>

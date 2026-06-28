@@ -24,5 +24,6 @@ export const defaultProfile = {
   },
   pdfReport: {
     enabled: true,
+    practitionerName: "",
   },
 };
