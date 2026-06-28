@@ -17,19 +17,20 @@ function formatDateTime(date) {
 
 function renderPillarTable(chart) {
   const pillars = chart.pillars;
-  const header = pillars.map((pillar) => `<th>${escapeHtml(pillar.pillarLabel)}</th>`).join("");
+  const header = pillars
+    .map((pillar) => `<th class="pillar-head pillar-${escapeHtml(pillar.key)}">${escapeHtml(pillar.pillarLabel)}</th>`)
+    .join("");
   const row = (label, selector) => `
     <tr>
-      <th>${escapeHtml(label)}</th>
+      <th class="row-head">${escapeHtml(label)}</th>
       ${pillars.map((pillar) => `<td>${escapeHtml(selector(pillar))}</td>`).join("")}
     </tr>
   `;
 
   return `
-    <section class="result-block">
+    <section class="result-block chart-block">
       <div class="section-title">
-        <h2>命式</h2>
-        <span>日干基準</span>
+        <h2>命式表</h2>
       </div>
       <div class="table-wrap">
         <table class="meishiki-table">
@@ -56,49 +57,30 @@ function renderElementBalance(chart) {
   const entries = Object.entries(chart.fiveElementBalance);
   const max = Math.max(...entries.map(([, count]) => count), 1);
   const elementMeta = {
-    木: {
-      className: "wood",
-      icon: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 7c8 0 15 6 15 14 0 9-7 15-15 15S9 30 9 21C9 13 16 7 24 7Z"/><path d="M24 29v12M17 41h14M24 29l-7-7M24 29l8-9"/></svg>`,
-    },
-    火: {
-      className: "fire",
-      icon: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M27 5c2 8 10 12 10 23 0 8-6 14-13 14S11 36 11 28c0-7 4-12 9-18 0 7 5 10 7 14 2-4 2-8 0-19Z"/><path d="M25 31c0 4-3 7-7 7 1 3 4 5 7 5 5 0 9-4 9-9 0-4-2-7-6-10 0 3-1 5-3 7Z"/></svg>`,
-    },
-    土: {
-      className: "earth",
-      icon: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M5 38 18 14l8 12 5-7 12 19H5Z"/><path d="M15 38h18M20 31h8"/></svg>`,
-    },
-    金: {
-      className: "metal",
-      icon: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4 39 19 24 44 9 19 24 4Z"/><path d="M9 19h30M18 19l6 25 6-25M18 19l6-15 6 15"/></svg>`,
-    },
-    水: {
-      className: "water",
-      icon: `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 5c8 10 14 18 14 26 0 8-6 13-14 13s-14-5-14-13c0-8 6-16 14-26Z"/><path d="M17 31c1 4 4 6 8 6"/></svg>`,
-    },
+    木: { className: "wood" },
+    火: { className: "fire" },
+    土: { className: "earth" },
+    金: { className: "metal" },
+    水: { className: "water" },
   };
 
   return `
-    <section class="result-block">
+    <section class="result-block balance-block">
       <div class="section-title">
         <h2>五行バランス</h2>
-        <span>天干・地支</span>
       </div>
-      <div class="balance-grid">
+      <div class="balance-list">
         ${entries
           .map(
             ([element, count]) => {
               const meta = elementMeta[element] || { className: "neutral", icon: "" };
               return `
-              <div class="balance-card balance-${meta.className}">
-                <div class="balance-icon">${meta.icon}</div>
-                <div class="balance-copy">
-                  <strong>${escapeHtml(element)}</strong>
-                  <span>${count}</span>
-                </div>
+              <div class="balance-row balance-${meta.className}">
+                <strong>${escapeHtml(element)}</strong>
                 <div class="balance-meter" aria-label="${escapeHtml(element)} ${count}">
                   <i style="width:${(count / max) * 100}%"></i>
                 </div>
+                <span>${count}</span>
               </div>
             `;
             },
@@ -111,7 +93,7 @@ function renderElementBalance(chart) {
 
 function renderMajorLuck(luck) {
   return `
-    <section class="result-block">
+    <section class="result-block luck-block major-luck-block">
       <div class="section-title">
         <h2>大運</h2>
         <span>${escapeHtml(luck.direction.label)}・開始 ${luck.start.age}歳</span>
@@ -151,7 +133,7 @@ function renderMajorLuck(luck) {
 
 function renderAnnualLuck(rows) {
   return `
-    <section class="result-block">
+    <section class="result-block luck-block annual-luck-block">
       <div class="section-title">
         <h2>年運</h2>
         <span>前後10年</span>
@@ -192,24 +174,34 @@ export function renderResult(target, { chart, majorLuck, annualLuck, profile }) 
     : `${String(chart.input.hour).padStart(2, "0")}:${String(chart.input.minute).padStart(2, "0")}`;
 
   target.innerHTML = `
+    <div class="app-preview-header">
+      <div class="app-mark" aria-hidden="true">◇</div>
+      <strong>四柱推命ツール</strong>
+      <span class="app-gear" aria-hidden="true"></span>
+    </div>
+    <nav class="app-tabs" aria-label="表示切り替え">
+      <span class="is-active">命式</span>
+      <span>大運</span>
+      <span>年運</span>
+      <span>五行</span>
+    </nav>
     <div class="result-summary">
       <div>
-        <p class="eyebrow">Calculated chart</p>
+        <p class="eyebrow">鑑定対象</p>
         <h1>${formatDate(chart.date)} ${escapeHtml(birthTimeLabel)}</h1>
-        <p>
-          月柱の節入り: ${escapeHtml(chart.monthBoundary.name)} ${formatDateTime(chart.monthBoundary.date)}
-          / 空亡: ${escapeHtml(chart.voidBranches.join("・"))}
-        </p>
+        <p>節入り: ${escapeHtml(chart.monthBoundary.name)} / 空亡: ${escapeHtml(chart.voidBranches.join("・"))}</p>
       </div>
       <div class="profile-badge">
-        <span>Rule profile</span>
+        <span>流派設定</span>
         <strong>${escapeHtml(profile.name)}</strong>
       </div>
     </div>
     ${renderPillarTable(chart)}
+    <div class="luck-grid">
+      ${renderMajorLuck(majorLuck)}
+      ${renderAnnualLuck(annualLuck)}
+    </div>
     ${renderElementBalance(chart)}
-    ${renderMajorLuck(majorLuck)}
-    ${renderAnnualLuck(annualLuck)}
     <section class="result-block">
       <div class="section-title">
         <h2>計算メモ</h2>
