@@ -1011,16 +1011,24 @@ tbody th,
   background: #fffefa;
 }
 
-.meishiki-table td:nth-child(2) {
-  color: #06458f;
+.meishiki-table td.element-wood {
+  color: #168847;
 }
 
-.meishiki-table td:nth-child(3) {
+.meishiki-table td.element-fire {
   color: #cf2f3c;
 }
 
-.meishiki-table td:nth-child(4) {
-  color: #8e6500;
+.meishiki-table td.element-earth {
+  color: #9a6e16;
+}
+
+.meishiki-table td.element-metal {
+  color: #7a4bbb;
+}
+
+.meishiki-table td.element-water {
+  color: #075ac2;
 }
 
 .luck-grid {

@@ -15,15 +15,61 @@ function formatDateTime(date) {
   return `${formatDate(date)} ${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 }
 
+const STEM_ELEMENT = {
+  甲: "wood",
+  乙: "wood",
+  丙: "fire",
+  丁: "fire",
+  戊: "earth",
+  己: "earth",
+  庚: "metal",
+  辛: "metal",
+  壬: "water",
+  癸: "water",
+};
+
+const BRANCH_ELEMENT = {
+  寅: "wood",
+  卯: "wood",
+  巳: "fire",
+  午: "fire",
+  辰: "earth",
+  戌: "earth",
+  丑: "earth",
+  未: "earth",
+  申: "metal",
+  酉: "metal",
+  子: "water",
+  亥: "water",
+};
+
+function elementClass(value) {
+  const text = String(value);
+  for (const char of text) {
+    if (STEM_ELEMENT[char]) return `element-${STEM_ELEMENT[char]}`;
+    if (BRANCH_ELEMENT[char]) return `element-${BRANCH_ELEMENT[char]}`;
+  }
+  return "";
+}
+
+function coloredCell(value, className = elementClass(value)) {
+  return `<td class="${className}">${escapeHtml(value)}</td>`;
+}
+
 function renderPillarTable(chart) {
   const pillars = chart.pillars;
   const header = pillars
     .map((pillar) => `<th class="pillar-head pillar-${escapeHtml(pillar.key)}">${escapeHtml(pillar.pillarLabel)}</th>`)
     .join("");
-  const row = (label, selector) => `
+  const row = (label, selector, classSelector = (value) => elementClass(value)) => `
     <tr>
       <th class="row-head">${escapeHtml(label)}</th>
-      ${pillars.map((pillar) => `<td>${escapeHtml(selector(pillar))}</td>`).join("")}
+      ${pillars
+        .map((pillar) => {
+          const value = selector(pillar);
+          return coloredCell(value, classSelector(value, pillar));
+        })
+        .join("")}
     </tr>
   `;
 
@@ -43,9 +89,9 @@ function renderPillarTable(chart) {
             ${row("干支", (pillar) => pillar.kanshiLabel)}
             ${row("蔵干", (pillar) => pillar.hiddenStems.join("・"))}
             ${row("主蔵干", (pillar) => pillar.mainHiddenStem)}
-            ${row("通変星", (pillar) => pillar.tenGod)}
-            ${row("蔵干通変", (pillar) => pillar.hiddenTenGod)}
-            ${row("十二運", (pillar) => pillar.twelveStage)}
+            ${row("通変星", (pillar) => pillar.tenGod, () => "")}
+            ${row("蔵干通変", (pillar) => pillar.hiddenTenGod, () => "")}
+            ${row("十二運", (pillar) => pillar.twelveStage, () => "")}
           </tbody>
         </table>
       </div>
