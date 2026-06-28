@@ -138,6 +138,28 @@ function renderElementBalance(chart) {
   `;
 }
 
+function renderInterpretation(interpretation) {
+  return `
+    <section id="interpretation-section" class="result-block interpretation-block">
+      <div class="section-title">
+        <h2>鑑定文</h2>
+      </div>
+      <div class="interpretation-list">
+        ${interpretation
+          .map(
+            (item) => `
+              <article>
+                <h3>${escapeHtml(item.title)}</h3>
+                <p>${escapeHtml(item.body)}</p>
+              </article>
+            `,
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
 function renderMajorLuck(luck) {
   return `
     <section id="major-luck-section" class="result-block luck-block major-luck-block">
@@ -215,7 +237,7 @@ function renderAnnualLuck(rows) {
   `;
 }
 
-export function renderResult(target, { chart, majorLuck, annualLuck, profile }) {
+export function renderResult(target, { chart, majorLuck, annualLuck, profile, interpretation = [] }) {
   const birthTimeLabel = chart.input.unknownTime
     ? "出生時刻なし"
     : `${String(chart.input.hour).padStart(2, "0")}:${String(chart.input.minute).padStart(2, "0")}`;
@@ -245,6 +267,12 @@ export function renderResult(target, { chart, majorLuck, annualLuck, profile }) 
       ${renderAnnualLuck(annualLuck)}
     </div>
     <div id="balance-section">${renderElementBalance(chart)}</div>
+    ${profile.fortuneText?.enabled ? renderInterpretation(interpretation) : ""}
+    ${
+      profile.pdfReport?.enabled
+        ? `<button type="button" class="pdf-button" data-print-report>PDF鑑定書を作成</button>`
+        : ""
+    }
     <nav class="bottom-nav" aria-label="主要表示">
       <button type="button" class="is-active" data-scroll-target="chart-section">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>

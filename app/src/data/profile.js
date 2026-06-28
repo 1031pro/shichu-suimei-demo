@@ -20,6 +20,9 @@ export const defaultProfile = {
     showAnnualLuck: true,
   },
   fortuneText: {
-    enabled: false,
+    enabled: true,
+  },
+  pdfReport: {
+    enabled: true,
   },
 };

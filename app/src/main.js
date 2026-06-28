@@ -2,6 +2,8 @@ import { setsuiri } from "../../data/setsuiri/setsuiri-1900-2200.js";
 import { defaultProfile } from "./data/profile.js";
 import { calculateChart } from "./engine/chart.js";
 import { calculateAnnualLuck, calculateMajorLuck } from "./engine/luck.js";
+import { generateInterpretation } from "./interpretation/generate.js";
+import { printReport } from "./report/print.js";
 import { renderResult } from "./ui/render.js";
 
 const form = document.querySelector("#birth-form");
@@ -13,6 +15,8 @@ const hourSelect = document.querySelector("#birth-hour");
 const minuteSelect = document.querySelector("#birth-minute");
 const unknownTime = document.querySelector("#unknown-time");
 const currentYearInput = document.querySelector("#current-year");
+
+let currentReport = null;
 
 function option(value, label = value) {
   const element = document.createElement("option");
@@ -59,10 +63,21 @@ function calculateAndRender() {
   const chart = calculateChart(input, setsuiri);
   const majorLuck = calculateMajorLuck(chart, setsuiri, input.currentYear);
   const annualLuck = calculateAnnualLuck(chart, input.currentYear, 10);
+  const interpretation = defaultProfile.fortuneText.enabled
+    ? generateInterpretation({ chart, majorLuck, annualLuck })
+    : [];
+  currentReport = {
+    chart,
+    majorLuck,
+    annualLuck,
+    interpretation,
+    profile: defaultProfile,
+  };
   renderResult(resultPanel, {
     chart,
     majorLuck,
     annualLuck,
+    interpretation,
     profile: defaultProfile,
   });
   resultPanel.hidden = false;
@@ -90,6 +105,12 @@ form.addEventListener("submit", (event) => {
 });
 
 resultPanel.addEventListener("click", (event) => {
+  const printButton = event.target.closest("[data-print-report]");
+  if (printButton && currentReport) {
+    printReport(currentReport);
+    return;
+  }
+
   const editButton = event.target.closest("[data-edit-input]");
   if (editButton) {
     document.body.classList.remove("result-mode");
