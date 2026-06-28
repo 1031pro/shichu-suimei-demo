@@ -1,4 +1,4 @@
-const CACHE_NAME = "shichu-suimei-tool-v6";
+const CACHE_NAME = "shichu-suimei-tool-v8";
 
 const APP_SHELL = [
   "./",
@@ -6,9 +6,12 @@ const APP_SHELL = [
   "./manifest.webmanifest",
   "./styles/app.css",
   "./icons/icon.svg",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
   "../assets/report/a4-landscape-ornament.png",
   "../assets/report/shichu-emblem.png",
   "./src/main.js",
+  "./src/auth.js",
   "./src/data/kanshi.js",
   "./src/data/profile.js",
   "./src/engine/chart.js",

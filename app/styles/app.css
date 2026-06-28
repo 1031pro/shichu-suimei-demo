@@ -33,6 +33,67 @@ body {
   background: #fbf3df;
 }
 
+body.is-locked {
+  overflow: hidden;
+}
+
+.demo-lock {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  color: #fffaf0;
+  background:
+    linear-gradient(180deg, rgba(6, 27, 54, 0.94), rgba(6, 27, 54, 0.98)),
+    #061b36;
+}
+
+.demo-lock[hidden] {
+  display: none;
+}
+
+.demo-lock-card {
+  width: min(100%, 380px);
+  padding: 28px;
+  background: rgba(255, 250, 240, 0.08);
+  border: 1px solid rgba(234, 214, 165, 0.48);
+  border-radius: 10px;
+}
+
+.demo-lock-card h1 {
+  margin-bottom: 22px;
+}
+
+.demo-lock-card label {
+  display: block;
+}
+
+.demo-lock-card button {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 16px;
+  color: #061b36;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  background: #ead6a5;
+  border: 1px solid #c79a32;
+  border-radius: 8px;
+}
+
+.demo-lock-error {
+  margin: 8px 0 0;
+  color: #ffd6d6;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+body.is-locked .app-shell {
+  visibility: hidden;
+}
+
 button,
 input,
 select {
