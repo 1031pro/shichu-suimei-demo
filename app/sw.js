@@ -1,4 +1,4 @@
-const CACHE_NAME = "shichu-suimei-tool-v10";
+const CACHE_NAME = "shichu-suimei-tool-v11";
 
 const APP_SHELL = [
   "./",
@@ -11,6 +11,7 @@ const APP_SHELL = [
   "../assets/report/a4-landscape-ornament.png",
   "../assets/report/shichu-emblem.png",
   "./src/main.js",
+  "./src/deploy-guard.js",
   "./src/auth.js",
   "./src/copy-guard.js",
   "./src/data/kanshi.js",

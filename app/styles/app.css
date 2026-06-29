@@ -104,6 +104,31 @@ body.is-locked .app-shell {
   visibility: hidden;
 }
 
+.deploy-guard {
+  display: grid;
+  min-height: 100vh;
+  padding: 20px;
+  color: #fffaf0;
+  background: #061b36;
+  place-items: center;
+}
+
+.deploy-guard section {
+  width: min(100%, 420px);
+  padding: 28px;
+  text-align: center;
+  background: rgba(255, 250, 240, 0.08);
+  border: 1px solid rgba(234, 214, 165, 0.48);
+  border-radius: 10px;
+}
+
+.deploy-guard a {
+  display: inline-block;
+  margin-top: 14px;
+  color: #ead6a5;
+  font-weight: 900;
+}
+
 button,
 input,
 select {
