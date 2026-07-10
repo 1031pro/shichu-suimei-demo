@@ -56,7 +56,7 @@ function coloredCell(value, className = elementClass(value)) {
   return `<td class="${className}">${escapeHtml(value)}</td>`;
 }
 
-function renderPillarTable(chart) {
+function renderPillarTable(chart, title = "命式表") {
   const displayOrder = ["time", "day", "month", "year"];
   const pillars = displayOrder.map((key) => chart.pillarMap[key]).filter(Boolean);
   const header = pillars
@@ -77,7 +77,7 @@ function renderPillarTable(chart) {
   return `
     <section class="result-block chart-block">
       <div class="section-title">
-        <h2>命式表</h2>
+        <h2>${escapeHtml(title)}</h2>
       </div>
       <div class="table-wrap">
         <table class="meishiki-table">
@@ -237,7 +237,146 @@ function renderAnnualLuck(rows) {
   `;
 }
 
-export function renderResult(target, { chart, majorLuck, annualLuck, profile, interpretation = [] }) {
+function renderCrossPillarTable(compatibility, firstName, secondName) {
+  const rows = compatibility.crossRelations
+    .map((item) => {
+      const signals = [
+        `五行：${item.stemRelation}`,
+        item.stemCombination ? "干合" : "",
+        item.branchRelation !== "—" ? `地支：${item.branchRelation}` : "",
+      ].filter(Boolean).join(" ／ ");
+      return `<tr>
+        <td>${escapeHtml(item.firstLabel)}</td>
+        <td>${escapeHtml(item.firstPillar.kanshiLabel)}<br><small>${escapeHtml(item.firstPillar.stem)}（${escapeHtml(item.firstPillar.stemElement)}）・${escapeHtml(item.firstPillar.branch)}</small></td>
+        <td>${escapeHtml(item.secondLabel)}</td>
+        <td>${escapeHtml(item.secondPillar.kanshiLabel)}<br><small>${escapeHtml(item.secondPillar.stem)}（${escapeHtml(item.secondPillar.stemElement)}）・${escapeHtml(item.secondPillar.branch)}</small></td>
+        <td>${escapeHtml(signals)}</td>
+      </tr>`;
+    })
+    .join("");
+  return `<section class="result-block cross-pillar-block">
+    <div class="section-title"><h2>柱ごとの照合一覧</h2><span>どことどこを読んだか</span></div>
+    <p class="subnote">${escapeHtml(firstName)}の年・月・日柱と、${escapeHtml(secondName)}の年・月・日柱をすべて照合しています。五行関係に加えて、干合・地支の六合／冲／害が出た場所を表示します。</p>
+    <div class="table-wrap cross-pillar-table">
+      <table>
+        <thead><tr><th>${escapeHtml(firstName)}</th><th>干支</th><th>${escapeHtml(secondName)}</th><th>干支</th><th>照合結果</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </section>`;
+}
+
+function renderCompatibility({ chart, partnerChart, compatibility }) {
+  const firstName = chart.input.customerName || "あなた";
+  const secondName = partnerChart.input.customerName || "お相手";
+  const relationLabel = {
+    比和: "同じ五行",
+    生じる: "あなたが生じる",
+    生じられる: "お相手が生じる",
+    剋す: "あなたが剋す",
+    剋される: "お相手が剋す",
+  }[compatibility.stemRelation];
+  const branchLabel = compatibility.branchRelation || "強い関係なし";
+  const stemDetail = compatibility.stemCombination
+    ? "さらに日干には干合があり、理屈より先に相手が気になる、互いの違いが印象に残るような引力として表れやすい組み合わせです。ただし、干合だけで「最高の相性」と決めるのではなく、日常の関係性と合わせて読むことが大切です。"
+    : "この関係は、似ている部分だけで結び付くというより、二人の違いをどう役割に変えるかで魅力が深まりやすい組み合わせです。";
+  const elementRows = Object.entries(chart.fiveElementBalance)
+    .map(([element, firstValue]) => {
+      const secondValue = partnerChart.fiveElementBalance[element];
+      return `
+        <div class="compatibility-element-row">
+          <strong>${escapeHtml(element)}</strong>
+          <div class="element-bar first" style="--amount:${firstValue}" aria-label="${escapeHtml(firstName)} ${escapeHtml(element)} ${firstValue}"><i></i><span>${firstValue}</span></div>
+          <div class="element-bar second" style="--amount:${secondValue}" aria-label="${escapeHtml(secondName)} ${escapeHtml(element)} ${secondValue}"><i></i><span>${secondValue}</span></div>
+        </div>`;
+    })
+    .join("");
+  return `
+    <div id="chart-section" class="app-preview-header">
+      <div class="app-mark" aria-hidden="true">◇</div>
+      <strong>四柱推命 相性診断</strong>
+      <button type="button" class="date-edit-button" data-edit-input>入力を変更</button>
+    </div>
+    <div class="result-summary compatibility-summary">
+      <div>
+        <p class="eyebrow">相性の傾向</p>
+        <h1>${escapeHtml(compatibility.level)}</h1>
+        <p>${escapeHtml(firstName)}：${formatDate(chart.date)} ／ ${escapeHtml(secondName)}：${formatDate(partnerChart.date)}</p>
+      </div>
+    </div>
+    <section class="result-block compatibility-map" aria-label="相性の見取り図">
+      <div class="section-title"><h2>相性の見取り図</h2><span>どの要素同士を読んでいるか</span></div>
+      <div class="compatibility-flow">
+        <div class="compatibility-source">
+          <span>${escapeHtml(firstName)}の生年月日</span>
+          <strong>日柱</strong>
+        </div>
+        <div class="compatibility-links" aria-hidden="true"><i></i><i></i></div>
+        <div class="compatibility-source">
+          <span>${escapeHtml(secondName)}の生年月日</span>
+          <strong>日柱</strong>
+        </div>
+      </div>
+      <div class="compatibility-pair-grid">
+        <div class="compatibility-pair">
+          <span class="pair-label">日干 <small>本人の軸・価値観</small></span>
+          <strong class="element-${elementClass(compatibility.firstDay.stem).replace("element-", "")}">${escapeHtml(compatibility.firstDay.stem)}<small>${escapeHtml(compatibility.firstDay.stemElement)}</small></strong>
+          <b>${escapeHtml(relationLabel)}</b>
+          <strong class="element-${elementClass(compatibility.secondDay.stem).replace("element-", "")}">${escapeHtml(compatibility.secondDay.stem)}<small>${escapeHtml(compatibility.secondDay.stemElement)}</small></strong>
+        </div>
+        <div class="compatibility-pair">
+          <span class="pair-label">日支 <small>日常・距離感</small></span>
+          <strong>${escapeHtml(compatibility.firstDay.branch)}</strong>
+          <b>${escapeHtml(branchLabel)}</b>
+          <strong>${escapeHtml(compatibility.secondDay.branch)}</strong>
+        </div>
+      </div>
+      <div class="compatibility-balance-map">
+        <div class="balance-map-head"><span>五行バランス <small>年・月・日柱の天干と地支</small></span><b>${escapeHtml(firstName)}</b><b>${escapeHtml(secondName)}</b></div>
+        ${elementRows}
+      </div>
+    </section>
+    <section class="result-block compatibility-block">
+      <div class="section-title"><h2>日干の五行関係</h2><span>見取り図の日干：${escapeHtml(compatibility.firstDay.stem)} × ${escapeHtml(compatibility.secondDay.stem)}</span></div>
+      <p>${escapeHtml(compatibility.stemText)}</p>
+      <p>${escapeHtml(stemDetail)}</p>
+    </section>
+    <section class="result-block compatibility-block">
+      <div class="section-title"><h2>日支の関係</h2><span>見取り図の日支：${escapeHtml(compatibility.firstDay.branch)} × ${escapeHtml(compatibility.secondDay.branch)}</span></div>
+      <p>${escapeHtml(compatibility.branchText)}</p>
+    </section>
+    <section class="result-block compatibility-block">
+      <div class="section-title"><h2>五行バランスの補完</h2></div>
+      <p>${escapeHtml(compatibility.balanceText)}</p>
+    </section>
+    <section class="result-block compatibility-block overall-reading-block">
+      <div class="section-title"><h2>総合所見</h2><span>年・月・日柱の照合から読む関係性</span></div>
+      <p>${escapeHtml(compatibility.overallReading.core)}</p>
+      <p>${escapeHtml(compatibility.overallReading.connection)}</p>
+      <p>${escapeHtml(compatibility.overallReading.tension)}</p>
+    </section>
+    ${renderCrossPillarTable(compatibility, firstName, secondName)}
+    <section class="compatibility-chart-grid" aria-label="二人の命式">
+      ${renderPillarTable(chart, `${firstName}の命式`)}
+      ${renderPillarTable(partnerChart, `${secondName}の命式`)}
+    </section>
+    <section class="result-block compatibility-block compatibility-guide">
+      <div class="section-title"><h2>二人の関係を育てるヒント</h2></div>
+      <p>相性は「良い・悪い」だけで決まるものではなく、二人の持ち味をどう扱うかで表れ方が変わります。今回の命式では、次の3点を意識すると関係の強みを活かしやすくなります。</p>
+      <ol>${compatibility.guide.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ol>
+    </section>
+    <section class="result-block compatibility-scope">
+      <div class="section-title"><h2>鑑定範囲と補足</h2></div>
+      <p>この診断は、生年月日から算出した年柱・月柱・日柱を用いた相性鑑定です。出生時刻が分かる場合は時柱を加え、用神・忌神、格局、蔵干を含む合冲刑害、大運・年運の重なりまで読むことで、より個別性の高い鑑定になります。</p>
+    </section>
+  `;
+}
+
+export function renderResult(target, { mode = "chart", chart, partnerChart, compatibility, majorLuck, annualLuck, profile, interpretation = [] }) {
+  if (mode === "compatibility") {
+    target.innerHTML = renderCompatibility({ chart, partnerChart, compatibility });
+    return;
+  }
   const birthTimeLabel = chart.input.unknownTime
     ? "出生時刻なし"
     : `${String(chart.input.hour).padStart(2, "0")}:${String(chart.input.minute).padStart(2, "0")}`;
